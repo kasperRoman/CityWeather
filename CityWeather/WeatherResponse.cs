@@ -6,12 +6,12 @@ namespace CityWeather
     public class WeatherResponse
     {
         [JsonPropertyName("name")]
-        public string Name { get; set; } = string.Empty;
+        public required string Name { get; set; }
 
         [JsonPropertyName("sys")]
         public Sys Sys { get; set; } = new();
 
-        public string Country => Sys.Country;
+        public string Country => Sys?.Country ?? "";
 
         [JsonPropertyName("main")]
         public MainInfo Main { get; set; } = new();

@@ -21,6 +21,9 @@ namespace CityWeather
         private readonly ILogger<WeatherService> _logger;
         private readonly OpenWeatherOptions _options;
 
+        private static readonly JsonSerializerOptions _jsonOptions =
+            new() { PropertyNameCaseInsensitive = true };
+
         public WeatherService(HttpClient client, IOptions<OpenWeatherOptions> options, ILogger<WeatherService> logger)
         {
             _client = client;
@@ -32,41 +35,53 @@ namespace CityWeather
         {
             string url = BuildRequestUrl(city);
 
-            _logger.LogInformation($"Executing request: {url}");
-
-            using HttpResponseMessage response = await _client.GetAsync(url);
-
-            switch (response.StatusCode)
-            {
-                case HttpStatusCode.Unauthorized:
-                    _logger.LogError("Invalid API key (401)");
-                    return null;
-
-                case HttpStatusCode.Forbidden:
-                    _logger.LogError("API key is blocked (403)");
-                    return null;
-
-                case HttpStatusCode.NotFound:
-                    _logger.LogWarning("City not found. Check spelling.");
-                    return null;
-            }
-
-            if (!response.IsSuccessStatusCode)
-            {
-                _logger.LogError($"Unexpected error: {response.StatusCode}");
-                return null;
-            }
-
-            string json = await response.Content.ReadAsStringAsync();
+            _logger.LogInformation("Requesting weather for {City}. URL: {Url}", city, url);
 
             try
             {
-                return JsonSerializer.Deserialize<WeatherResponse>(json,
-                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+                using HttpResponseMessage response = await _client.GetAsync(url);
+
+                switch (response.StatusCode)
+                {
+                    case HttpStatusCode.Unauthorized:
+                        _logger.LogError("Invalid API key (401).");
+                        return null;
+
+                    case HttpStatusCode.Forbidden:
+                        _logger.LogError("API key is blocked (403).");
+                        return null;
+
+                    case HttpStatusCode.NotFound:
+                        _logger.LogWarning("City '{City}' not found.", city);
+                        return null;
+                }
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    _logger.LogError("Unexpected HTTP error {StatusCode}", response.StatusCode);
+                    return null;
+                }
+
+                string json = await response.Content.ReadAsStringAsync();
+
+                try
+                {
+                    return JsonSerializer.Deserialize<WeatherResponse>(json, _jsonOptions);
+                }
+                catch (JsonException ex)
+                {
+                    _logger.LogError(ex, "JSON deserialization error.");
+                    return null;
+                }
             }
-            catch (JsonException ex)
+            catch (TaskCanceledException ex) when (ex.InnerException is TimeoutException)
             {
-                _logger.LogError(ex, "JSON deserialization error.");
+                _logger.LogError("Request timeout.");
+                return null;
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, "Network error during weather request.");
                 return null;
             }
         }
