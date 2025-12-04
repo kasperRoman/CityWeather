@@ -21,19 +21,21 @@ namespace CityWeather
                 Console.Write("Enter city name (or 'exit'): ");
                 string? city = Console.ReadLine();
 
-                if (string.IsNullOrWhiteSpace(city))
+                string normalized = city?.Trim() ?? "";
+
+                if (string.IsNullOrWhiteSpace(normalized))
                 {
                     _logger.LogWarning("City was not entered.");
                     continue;
                 }
 
-                if (city.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                if (normalized.Equals("exit", StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogInformation("Exiting program.");
                     break;
                 }
 
-                var weather = await _service.GetWeatherAsync(city);
+                var weather = await _service.GetWeatherAsync(normalized);
 
                 if (weather == null)
                 {
