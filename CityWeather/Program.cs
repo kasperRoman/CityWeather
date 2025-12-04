@@ -28,6 +28,7 @@ internal class Program
             {
                 logging.ClearProviders();
                 logging.AddConsole();
+                logging.AddFilter("System.Net.Http.HttpClient", LogLevel.Warning);
             })
             .Build();
 

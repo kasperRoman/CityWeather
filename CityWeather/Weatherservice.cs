@@ -35,8 +35,6 @@ namespace CityWeather
         {
             string url = BuildRequestUrl(city);
 
-            _logger.LogInformation("Requesting weather for {City}. URL: {Url}", city, url);
-
             try
             {
                 using HttpResponseMessage response = await _client.GetAsync(url);
