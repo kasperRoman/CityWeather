@@ -15,7 +15,7 @@ namespace CityWeather
         Task<WeatherResponse?> GetWeatherAsync(string city);
     }
 
-    public class WeatherService : IWeatherService  //реалізує інтерфейс
+    public class WeatherService : IWeatherService  
     {
         private readonly HttpClient _client;
         private readonly ILogger<WeatherService> _logger;
