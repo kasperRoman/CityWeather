@@ -1,4 +1,6 @@
-﻿using CityWeather;
+﻿using CityWeather.Configuration;
+using CityWeather.Core;
+using CityWeather.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;

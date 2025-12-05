@@ -1,19 +1,16 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CityWeather.Configuration;
+using CityWeather.Dtos;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
 
-namespace CityWeather
+namespace CityWeather.Services
 {
-    public interface IWeatherService
-    {
-        Task<WeatherResponse?> GetWeatherAsync(string city);
-    }
+    //public interface IWeatherService
+    //{
+    //    Task<WeatherResponse?> GetWeatherAsync(string city);
+    //}
 
     public class WeatherService : IWeatherService  
     {

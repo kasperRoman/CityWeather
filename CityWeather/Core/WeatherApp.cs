@@ -1,7 +1,7 @@
-﻿using CityWeather;
+﻿using CityWeather.Services;
 using Microsoft.Extensions.Logging;
 
-namespace CityWeather
+namespace CityWeather.Core
 {
     public class WeatherApp
     {
@@ -19,23 +19,23 @@ namespace CityWeather
             while (true)
             {
                 Console.Write("Enter city name (or 'exit'): ");
-                string? city = Console.ReadLine();
+                string? rawInput = Console.ReadLine();
 
-                string normalized = city?.Trim() ?? "";
+                string cityInput = rawInput?.Trim() ?? "";
 
-                if (string.IsNullOrWhiteSpace(normalized))
+                if (string.IsNullOrWhiteSpace(cityInput))
                 {
                     _logger.LogWarning("City was not entered.");
                     continue;
                 }
 
-                if (normalized.Equals("exit", StringComparison.OrdinalIgnoreCase))
+                if (cityInput.Equals("exit", StringComparison.OrdinalIgnoreCase))
                 {
                     _logger.LogInformation("Exiting program.");
                     break;
                 }
 
-                var weather = await _service.GetWeatherAsync(normalized);
+                var weather = await _service.GetWeatherAsync(cityInput);
 
                 if (weather == null)
                 {

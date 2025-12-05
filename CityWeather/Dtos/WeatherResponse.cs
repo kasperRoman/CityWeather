@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
-namespace CityWeather
+namespace CityWeather.Dtos
 {
     public class WeatherResponse
     {
