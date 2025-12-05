@@ -19,33 +19,6 @@ namespace CityWeather.Dtos
         public Wind Wind { get; set; } = new();
 
         [JsonPropertyName("weather")]
-        public List<WeatherInfo> Weather { get; set; } = new();
-    }
-
-    public class Sys
-    {
-        [JsonPropertyName("country")]
-        public string Country { get; set; } = string.Empty;
-    }
-
-    public class MainInfo
-    {
-        [JsonPropertyName("temp")]
-        public double Temp { get; set; }
-
-        [JsonPropertyName("humidity")]
-        public int Humidity { get; set; }
-    }
-
-    public class Wind
-    {
-        [JsonPropertyName("speed")]
-        public double Speed { get; set; }
-    }
-
-    public class WeatherInfo
-    {
-        [JsonPropertyName("description")]
-        public string Description { get; set; } = string.Empty;
+        public List<WeatherInfo> Weather { get; set; } = [];
     }
 }

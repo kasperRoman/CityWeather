@@ -1,6 +1,7 @@
 ﻿using CityWeather.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
+using CityWeather.Configuration;
 
 namespace CityWeather.Tests
 {
