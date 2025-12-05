@@ -3,15 +3,13 @@ using CityWeather.Dtos;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System.Net;
+using System.Runtime.CompilerServices;
 using System.Text.Json;
+
+[assembly: InternalsVisibleTo("CityWeather.Tests")]
 
 namespace CityWeather.Services
 {
-    //public interface IWeatherService
-    //{
-    //    Task<WeatherResponse?> GetWeatherAsync(string city);
-    //}
-
     public class WeatherService : IWeatherService  
     {
         private readonly HttpClient _client;
@@ -81,7 +79,7 @@ namespace CityWeather.Services
             }
         }
 
-        private string BuildRequestUrl(string city)
+        internal string BuildRequestUrl(string city)
         {
             return $"weather?q={Uri.EscapeDataString(city)}&appid={_options.ApiKey}&units=metric&lang=en";
         }

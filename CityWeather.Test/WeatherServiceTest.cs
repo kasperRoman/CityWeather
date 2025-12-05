@@ -1,24 +1,32 @@
-﻿using CityWeather.Services;
+﻿using CityWeather.Configuration;
+using CityWeather.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Options;
-using CityWeather.Configuration;
+
 
 namespace CityWeather.Tests
 {
-    public class WeatherServiceTest
+    public class WeatherServiceTests
     {
         [Fact]
-        public void BuildRequestUrl_ReturnsCorrectUrl()
+        public void BuildRequestUrl_ShouldReturnCorrectUrl()
         {
-            var options = Options.Create(new OpenWeatherOptions { ApiKey = "testkey" });
-            var service = new WeatherService(new HttpClient(), options, NullLogger<WeatherService>.Instance);
+            var options = Options.Create(new OpenWeatherOptions
+            {
+                ApiKey = "TEST_KEY"
+            });
 
-            var method = typeof(WeatherService).GetMethod("BuildRequestUrl", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
-            string url = (string)method.Invoke(service, ["Lviv"])!;
+            var httpClient = new HttpClient();
+            var logger = NullLogger<WeatherService>.Instance;
 
-            Assert.Contains("q=Lviv", url);
-            Assert.Contains("appid=testkey", url);
-            Assert.Contains("units=metric", url);
+            var service = new WeatherService(httpClient, options, logger);
+            
+            string url = service.BuildRequestUrl("New York");
+
+            Assert.Contains("q=New%20York", url);
+            Assert.Contains("appid=TEST_KEY", url);
+            Assert.Contains("&units=metric", url);
+            Assert.Contains("&lang=en", url);
         }
     }
 }
