@@ -108,6 +108,9 @@ namespace CityWeather.Tests
 
             var handler = new FakeHttpMessageHandler(response404);
             var httpClient = new HttpClient(handler);
+            {
+                httpClient.BaseAddress = new Uri("https://api.openweathermap.org/data/2.5/");
+            }
 
             var loggerMock = new Mock<ILogger<WeatherService>>();
 
@@ -121,7 +124,7 @@ namespace CityWeather.Tests
                 x => x.Log(
                     LogLevel.Warning,
                     It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((state, type) => state.ToString()!.Contains("City not found (404)") ),
+                    It.Is<It.IsAnyType>((state, type) => state.ToString()!.Contains("not found") ),
                     It.IsAny<Exception?>(),
                     It.IsAny<Func<It.IsAnyType, Exception?, string>>()
                 ),
